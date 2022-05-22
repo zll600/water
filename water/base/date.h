@@ -22,7 +22,7 @@ class Date {
         return micro_seconds_since_epoch_ > date.micro_seconds_since_epoch_;
     }
 
-    int64_t get_micro_seconds_since_epoch() {
+    int64_t get_micro_seconds_since_epoch() const {
         return micro_seconds_since_epoch_;
     }
 
