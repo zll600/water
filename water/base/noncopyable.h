@@ -1,5 +1,5 @@
-#ifdef __WALK_BASE_NONCOPYABLE_H__
-#define __WALK_BASE_NONCOPYABLE_H__
+#ifndef __WATER_BASE_NONCOPYABLE_H__
+#define __WATER_BASE_NONCOPYABLE_H__
 
 namespace water {
 
@@ -8,10 +8,10 @@ class Noncopyable {
     Noncopyable() =default;
     ~Noncopyable() =default;
  private:
-    Noncopyable(const&) =delete;
+    Noncopyable(const Noncopyable&) =delete;
     Noncopyable& operator=(const Noncopyable&) =delete;
 };
 
 }   // namespace water
 
-#endif // __WALK_BASE_NONCOPYABLE_H__
+#endif // __WATER_BASE_NONCOPYABLE_H__

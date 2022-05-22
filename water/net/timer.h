@@ -4,12 +4,13 @@
 #include <atomic>
 #include <stdint.h> 
 
+#include "water/base/noncopyable.h"
 #include "water/base/date.h"
 #include "callbacks.h"
 
 namespace water {
 
-class Timer {
+class Timer : public Noncopyable {
  public:
     Timer(const TimerCallback& cb, const Date& when, double interval)
         : callback_(cb),

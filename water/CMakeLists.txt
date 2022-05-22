@@ -1,4 +1,6 @@
-include_directories(${PROJECT_SOURCE_DIR})
+include_directories(
+    ${PROJECT_SOURCE_DIR}
+)
 
 set(LIB_SRC
     base/date.cc
