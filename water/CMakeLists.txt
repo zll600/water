@@ -9,6 +9,7 @@ set(LIB_SRC
     net/channel.cc
     net/poller.cc
     net/event_loop.cc
+    base/serial_task_queue.cc
 )
 
 add_library(water ${LIB_SRC})

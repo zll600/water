@@ -17,12 +17,12 @@ class TaskQueue : public Noncopyable {
         std::promise<int> prom;
         std::future<int> fut = prom.get_future();
         RunTaskInQueue([&]() {
-            task();
-            prom.set_value(1);
+                    task();
+                    prom.set_value(1);
         });
         fut.get();
     }
-};
+}
 
 } // namespace water
 

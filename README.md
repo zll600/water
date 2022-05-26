@@ -14,3 +14,7 @@
     - 封装 epoll，实现 IO 多路复用
 - EventLoop
     - 封装事件循环
+- TaskQueue
+    - 任务队列，只定义接口
+- SerialTaskQueue
+    - 串行的任务队列
