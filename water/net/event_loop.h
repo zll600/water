@@ -2,7 +2,6 @@
 #define __WATER_NET_EVENTLOOP_H__
 
 #include <vector>
-#include <queue>
 #include <functional>
 #include <memory>
 #include <thread>
@@ -81,7 +80,13 @@ class EventLoop : public Noncopyable {
      * 队列中的回调函数在调用完时间回调函数后被调用
      */
     void QueueInLoop(const Func& func);
-    void WakeUp() {}
+
+    /**
+     * 内部使用
+     * 唤醒 IO 线程，处理
+     */
+    void WakeUp();
+    void WakeUpRead();
 
     /**
      * --- 线程安全 ---
@@ -115,14 +120,17 @@ class EventLoop : public Noncopyable {
 
     std::mutex funcs_mutex_;
 
-    std::queue<Func> funcs_;    // 任务函数列表
+    std::vector<Func> funcs_;    // 任务函数列表
     std::unique_ptr<TimerQueue> timer_queue_;   // 定时器队列
     bool calling_funcs_ = false;    // 是否正在出来 pending functor
+    int wake_up_fd_;    // 用于唤醒 IO 线程的文件描述符
+    std::unique_ptr<Channel> wake_up_channel_ptr_;  // 不需要像内部类 TimerQueue 一样暴露给客户端，不需共享所有权
 
     /**
      * 如果不在 IO 线程中调用此函数，则打印 IO 线程信息
      */
     void AbortNotInLoopThread();
+    void DoRunInLoopFuncs();
 };
 
 } // namespace water

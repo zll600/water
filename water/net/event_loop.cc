@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <sys/eventfd.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <algorithm>
@@ -32,9 +33,15 @@ EventLoop::EventLoop()
     current_active_channel_(nullptr),
     quit_(false),
     event_handling_(false),
-    timer_queue_(new TimerQueue(this)) {
+    timer_queue_(new TimerQueue(this)),
+    wake_up_fd_(CreateEventfd()),
+    wake_up_channel_ptr_(new Channel(this, wake_up_fd_)) {
     assert(t_loop_in_this_thread == 0);;
     t_loop_in_this_thread = this;
+
+    wake_up_channel_ptr_->set_read_callback(
+            std::bind(&EventLoop::WakeUpRead, this)); 
+    wake_up_channel_ptr_->EnableReading();
 }
 
 EventLoop::~EventLoop() {
@@ -87,6 +94,7 @@ void EventLoop::Loop() {
         current_active_channel_ = nullptr;
         event_handling_ = false;
         std::cout << "looping_" << std::endl;
+        DoRunInLoopFuncs();
     }
     looping_ = false;
 }
@@ -108,7 +116,7 @@ void EventLoop::RunInLoop(const Func& func) {
 void EventLoop::QueueInLoop(const Func& func) {
     {
         std::lock_guard<std::mutex> lk(funcs_mutex_);
-        funcs_.push(func);
+        funcs_.push_back(func);
     }
 
      // 有两种情况需要唤醒 IO 线程：
@@ -123,7 +131,7 @@ void EventLoop::QueueInLoop(const Func& func) {
     // 总结，只有在 IO 线程的事件回调函数中调用 EventLoop::queueInLoop()
     // 才无须调用 EventLoop::wakeup() 唤醒 IO 线程。因为在事件回调处理完之后，
     // 会调用 doPendingFunctors() 函数，处理 pending functor，该 cb  函数也会被调用。
-    if (!IsInLoopThread() || calling_funcs_) {
+    if (!IsInLoopThread() || calling_funcs_ || !looping_) {
         WakeUp();
     }
 }
@@ -138,6 +146,29 @@ void EventLoop::RunAfter(double delay, const Func& func) {
 
 void EventLoop::RunEvery(double interval, const Func& func) {
     timer_queue_->AddTimer(func, Date::Now(), interval);
+}
+
+void EventLoop::DoRunInLoopFuncs() {
+    calling_funcs_ = true;
+    std::vector<Func> tmp_funcs;
+    {
+        std::lock_guard<std::mutex> lk(funcs_mutex_);
+        tmp_funcs.swap(funcs_);
+    }
+    for (auto funcs : tmp_funcs) {
+        funcs();
+    }
+    calling_funcs_ = false;
+}
+
+void EventLoop::WakeUp() {
+    uint64_t tmp = 1;
+    ::write(wake_up_fd_, &tmp, sizeof(tmp));
+}
+
+void EventLoop::WakeUpRead() {
+    uint64_t tmp;
+    ::read(wake_up_fd_, &tmp, sizeof(tmp));
 }
 
 } // namespace water
