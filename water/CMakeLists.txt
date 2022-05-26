@@ -5,6 +5,10 @@ include_directories(
 set(LIB_SRC
     base/date.cc
     net/timer.cc
+    net/timer_queue.cc
+    net/channel.cc
+    net/poller.cc
+    net/event_loop.cc
 )
 
 add_library(water ${LIB_SRC})
