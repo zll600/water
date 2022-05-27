@@ -10,6 +10,7 @@ set(LIB_SRC
     net/poller.cc
     net/event_loop.cc
     base/serial_task_queue.cc
+    base/logger.cc
 )
 
 add_library(water ${LIB_SRC})

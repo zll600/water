@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#include <string>
+
+#define MICRO_SECONDS_PER_SEC 1000000
+
 namespace water {
 
 // 以微秒形式返回的时间
@@ -12,7 +16,7 @@ class Date {
     ~Date() =default;
 
     // 获取 seconds 之后的时间
-    Date After(double seconds) const;
+    const Date After(double seconds) const;
     
     bool operator<(const Date& date) const {
         return micro_seconds_since_epoch_ < date.micro_seconds_since_epoch_;
@@ -24,6 +28,14 @@ class Date {
 
     int64_t get_micro_seconds_since_epoch() const {
         return micro_seconds_since_epoch_;
+    }
+
+    // 格式化时间
+    std::string ToFormattedString(bool show_micro_seconds) const; // GMT
+     
+    // 判断时间是否在同一秒
+    bool IsSameSecond(const Date& date) const {
+        return micro_seconds_since_epoch_ / MICRO_SECONDS_PER_SEC == date.get_micro_seconds_since_epoch() / MICRO_SECONDS_PER_SEC;
     }
 
     // 获取当前时间
