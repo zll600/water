@@ -25,7 +25,7 @@ SerialTaskQueue::~SerialTaskQueue() {
 }
 
 void SerialTaskQueue::RunTaskInQueue(const std::function<void()>& task) {
-    std::unique_lock<std::mutex> lk(task_mutex_);
+    std::lock_guard<std::mutex> lk(task_mutex_);
     task_queue_.push(task);
     task_cond_.notify_one();
 }

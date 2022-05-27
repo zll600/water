@@ -62,12 +62,18 @@ class Logger : public Noncopyable {
 
     std::stringstream& get_log_stream() { return log_stream_; }
 
-    static void set_output_func(std::function<void(const char*, uint64_t)> func) {
-        output_func_ = func;
+    static void set_output_func(std::function<void(const char*, uint64_t)> output_func,
+            std::function<void()> flush_func) {
+        output_func_ = output_func;
+        flush_func_ = flush_func;
     }
+
+    // 设置默认级别
     static void set_log_level(LogLevel level) {
         log_level_ = level;
     }
+
+    // 获取默认日志级别
     static LogLevel get_log_level() {
         return log_level_;
     }
@@ -78,10 +84,9 @@ class Logger : public Noncopyable {
     SourceFile source_file_;    // 文件名
     int file_line_;     // 行号
     LogLevel level_;    // 日志级别
-    static uint64_t last_second_;
-    static std::string last_time_string_;   // 保存上次格式化后的时间
-    static LogLevel log_level_;     // 日志级别
+    static LogLevel log_level_;     // 默认日志级别
     static std::function<void(const char*, uint64_t)> output_func_; // 将日志输出的目的地
+    static std::function<void()> flush_func_;   // 刷新缓冲区函数
 
     // 格式化时间
     void FormatTime();

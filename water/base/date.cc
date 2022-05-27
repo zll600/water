@@ -35,4 +35,18 @@ std::string Date::ToFormattedString(bool show_micro_seconds) const {
     return buf;
 }
 
+const Date Date::RoundSecond() const {
+    return Date(micro_seconds_since_epoch_ - (micro_seconds_since_epoch_ % MICRO_SECONDS_PER_SEC));
+}
+
+const Date Date::RoundDay() const {
+    struct tm *t;
+    time_t seconds = static_cast<time_t>(micro_seconds_since_epoch_ / MICRO_SECONDS_PER_SEC);
+    t = localtime(&seconds);
+    t->tm_hour = 0;
+    t->tm_min = 0;
+    t->tm_sec = 0;
+    return Date(mktime(t) * MICRO_SECONDS_PER_SEC);
+}
+
 } // namespace water

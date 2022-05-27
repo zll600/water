@@ -13,7 +13,7 @@ namespace water {
 class Date {
  public:
     Date() : micro_seconds_since_epoch_(0) {}
-    ~Date() =default;
+    ~Date(){}
 
     // 获取 seconds 之后的时间
     const Date After(double seconds) const;
@@ -37,6 +37,11 @@ class Date {
     bool IsSameSecond(const Date& date) const {
         return micro_seconds_since_epoch_ / MICRO_SECONDS_PER_SEC == date.get_micro_seconds_since_epoch() / MICRO_SECONDS_PER_SEC;
     }
+
+    // 对秒取整
+    const Date RoundSecond() const;
+    // 对天取整
+    const Date RoundDay() const;
 
     // 获取当前时间
     static const Date Now();

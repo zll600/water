@@ -1,5 +1,7 @@
 #include "water/water.h"
 
+#include <thread>
+
 int main() {
     LOG_DEBUG << "debug log! " << 1; 
     LOG_TRACE << "trace log! " << 2;
@@ -7,9 +9,14 @@ int main() {
     LOG_WARN << "warning log! " << 4;
 
     LOG_ERROR << "error log! " << 5;
-    LOG_FATAL << "fatal log! " << 6;
+    std::thread thr([]() {
+        LOG_FATAL << "fatal log! " << 6;
+    });
     FILE *fp = fopen("./notexistfile", "rb");
     if (fp == nullptr) {
         LOG_SYSERR << "syerr log " << 7;
     }
+    thr.join();
+
+    return 0;
 }
