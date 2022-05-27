@@ -1,6 +1,10 @@
 #include "serial_task_queue.h"
 
+#include <sys/prctl.h>
+
 #include <iostream>
+
+#include "water/base/logger.h"
 
 namespace water {
 
@@ -8,16 +12,16 @@ SerialTaskQueue::SerialTaskQueue(const std::string& name)
     : queeu_name_(name),
     thr_(std::bind(&SerialTaskQueue::QueueFunc, this)) {
     if (name.empty()) {
-        queeu_name_ = "serial_task_queue_";
+        queeu_name_ = "SerialTaskQueue";
     }
-    std::cout << "constract SerialTaskQueue(" << queeu_name_ << ")" << std::endl;
+    LOG_TRACE << "constract SerialTaskQueue(" << queeu_name_ << ")";
 }
 
 SerialTaskQueue::~SerialTaskQueue() {
     stop_ = true;
     task_cond_.notify_all();
     thr_.join();
-    std::cout << "unconstract SerialTaskQueue(" << queeu_name_ << ")" << std::endl;
+    LOG_TRACE << "unconstract SerialTaskQueue(" << queeu_name_ << ")";
 }
 
 void SerialTaskQueue::RunTaskInQueue(const std::function<void()>& task) {
@@ -27,6 +31,7 @@ void SerialTaskQueue::RunTaskInQueue(const std::function<void()>& task) {
 }
 
 void SerialTaskQueue::QueueFunc() {
+    ::prctl(PR_SET_NAME, queeu_name_.c_str());
     while (!stop_) {
         std::function<void()> task;
         {
@@ -36,7 +41,7 @@ void SerialTaskQueue::QueueFunc() {
             }
 
             if (!task_queue_.empty()) {
-                std::cout << "got a new task!" << std::endl;
+                LOG_TRACE << "got a new task!";
                 task = std::move(task_queue_.front());
                 task_queue_.pop();
             } else {
