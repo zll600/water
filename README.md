@@ -18,3 +18,9 @@
     - 任务队列，只定义接口
 - SerialTaskQueue
     - 串行的任务队列
+- Logger
+    - 日志类，支持不同的日志输出函数，可以选择多种输出地和刷新缓冲区的方式
+- AsyncLogger
+    - LoggerFile
+        - 封装对 FILE 的操作
+    - 实现异步文件日志

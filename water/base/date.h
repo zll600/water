@@ -31,7 +31,8 @@ class Date {
     }
 
     // 格式化时间
-    std::string ToFormattedString(bool show_micro_seconds) const; // GMT
+    std::string ToFormattedString(bool show_micro_seconds) const; // UTC
+    std::string ToCustomedFormattedString(const std::string& fmt_str) const; // UTC
      
     // 判断时间是否在同一秒
     bool IsSameSecond(const Date& date) const {

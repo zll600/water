@@ -11,6 +11,7 @@ set(LIB_SRC
     net/event_loop.cc
     base/serial_task_queue.cc
     base/logger.cc
+    base/async_file_logger.cc
 )
 
 add_library(water ${LIB_SRC})

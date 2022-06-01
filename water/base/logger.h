@@ -13,7 +13,7 @@
 
 namespace water {
 
-class Logger : public Noncopyable {
+class Logger : Noncopyable {
  public:
     enum LogLevel {
         TRACE = 0,
@@ -62,7 +62,7 @@ class Logger : public Noncopyable {
 
     std::stringstream& get_log_stream() { return log_stream_; }
 
-    static void set_output_func(std::function<void(const char*, uint64_t)> output_func,
+    static void set_output_func(std::function<void(const std::stringstream&)> output_func,
             std::function<void()> flush_func) {
         output_func_ = output_func;
         flush_func_ = flush_func;
@@ -85,7 +85,7 @@ class Logger : public Noncopyable {
     int file_line_;     // 行号
     LogLevel level_;    // 日志级别
     static LogLevel log_level_;     // 默认日志级别
-    static std::function<void(const char*, uint64_t)> output_func_; // 将日志输出的目的地
+    static std::function<void(const std::stringstream&)> output_func_; // 将日志输出的目的地
     static std::function<void()> flush_func_;   // 刷新缓冲区函数
 
     // 格式化时间

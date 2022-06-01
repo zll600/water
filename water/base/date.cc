@@ -35,6 +35,15 @@ std::string Date::ToFormattedString(bool show_micro_seconds) const {
     return buf;
 }
 
+std::string Date::ToCustomedFormattedString(const std::string& fmt_str) const {
+        char buf[256] = {0};
+        time_t seconds = static_cast<time_t>(micro_seconds_since_epoch_ / MICRO_SECONDS_PER_SEC);
+        struct tm tm_time;
+        gmtime_r(&seconds, &tm_time);
+        strftime (buf,sizeof(buf),fmt_str.c_str(),&tm_time);
+        return std::string(buf);
+}
+
 const Date Date::RoundSecond() const {
     return Date(micro_seconds_since_epoch_ - (micro_seconds_since_epoch_ % MICRO_SECONDS_PER_SEC));
 }
