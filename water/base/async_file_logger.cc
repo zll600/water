@@ -49,9 +49,10 @@ uint64_t AsyncFileLogger::LoggerFile::GetLength() const {
     return 0;
 }
 
-AsyncFileLogger:: AsyncFileLogger() {}
+AsyncFileLogger::AsyncFileLogger() {}
 
 AsyncFileLogger:: ~AsyncFileLogger() {
+    std::cout << "AsyncFileLogger::log_buffer_ len = " << log_buffer_.length() << std::endl;
     stop_flag_ = true;
     if (thread_ptr_) {
         stop_flag_ = true;
@@ -67,10 +68,30 @@ AsyncFileLogger:: ~AsyncFileLogger() {
 
 void AsyncFileLogger::Output(const std::stringstream& out) {
     std::lock_guard<std::mutex> lk(mut_);
+
+    if (log_buffer_.length() > MEM_BUFFER_SIZE * 2) {
+        ++lost_counter_;
+        return;
+    }
+    
+    if (lost_counter_ > 0) {
+        char log_err[128];
+        sprintf(log_err, "%ld log information is lost\n", lost_counter_);
+        lost_counter_ = 0;
+        log_buffer_.append(log_err);
+    }
+
     log_buffer_.append(out.str());
 
     // 只有当缓冲区长度到达一定长度时才唤醒日志线程
     if (log_buffer_.length() > MEM_BUFFER_SIZE) {
+        cond_.notify_one();
+    }
+}
+
+void AsyncFileLogger::Flush() {
+    std::lock_guard<std::mutex> lk(mut_);
+    if (!log_buffer_.empty()) {
         cond_.notify_one();
     }
 }

@@ -6,6 +6,7 @@
 int main() {
     water::AsyncFileLogger async_file_logger;
     async_file_logger.SetFileName("async_test");
+    async_file_logger.StartLogging();
 
     water::Logger::set_output_func([&](const std::stringstream& buf) {
         async_file_logger.Output(buf);
@@ -23,7 +24,17 @@ int main() {
     if (fp == nullptr) {
         LOG_SYSERR << "syserr log1" << 7;
     }
+    
+    std::thread thr2([]() {
+        for (int i = 0; i < 10000; ++i) {
+            ++i;
+            LOG_INFO << "this is " << i << "th log";
+        }
+    });
+
     thr.join();
+    thr2.join();
+
 
     return 0;
 }

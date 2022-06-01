@@ -20,6 +20,8 @@ class AsyncFileLogger : Noncopyable {
 
     // 日志输出
     void Output(const std::stringstream& out);
+    // 刷新函数
+    void Flush();
     // 创建一个后台线程写日志
     void StartLogging();
     // 设置单个日志文件的最大大小
@@ -57,6 +59,7 @@ class AsyncFileLogger : Noncopyable {
     std::string file_ext_name_ = ".log"; // 文件路径
     uint64_t size_limit_ = 20 * 1024 * 1024;    // 文件大小限制
     std::unique_ptr<LoggerFile> logger_file_ptr_;   // 日志文件指针
+    uint64_t lost_counter_ = 0;
 
     // 将日志写入文件
     void WriteLogToFile(const std::string& buf);
