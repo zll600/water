@@ -5,11 +5,15 @@
 #include <condition_variable>
 #include <thread>
 #include <memory>
+#include <queue>
 
 #include "noncopyable.h"
 #include "date.h"
 
 namespace water {
+
+using StringPtr = std::shared_ptr<std::string>;
+using StringPtrQueue = std::queue<StringPtr>;
 
 // 异步文件日志
 class AsyncFileLogger : Noncopyable {
@@ -19,7 +23,7 @@ class AsyncFileLogger : Noncopyable {
     ~AsyncFileLogger();
 
     // 日志输出
-    void Output(const std::stringstream& out);
+    void Output(const char *msg, uint64_t len);
     // 刷新函数
     void Flush();
     // 创建一个后台线程写日志
@@ -36,7 +40,7 @@ class AsyncFileLogger : Noncopyable {
         ~LoggerFile();
         
         // 将日志写入文件
-        void WriteLog(const std::string& buf);
+        void WriteLog(const StringPtr buf);
         // 获取文件长度
         uint64_t GetLength() const;
         explicit operator bool() const { return fp_ != nullptr; }
@@ -47,11 +51,14 @@ class AsyncFileLogger : Noncopyable {
         std::string file_path_;     // 文件路径
         std::string file_base_name_;    // 文件名
         std::string file_ext_name_; // 文件名后缀
+        
+        static uint64_t file_seq_;
     };
 
     std::mutex mut_;    // 互斥锁
     std::condition_variable cond_;  // 条件变量
-    std::string log_buffer_;    // 日志缓冲区
+    StringPtr log_buffer_ptr_;    // 日志缓冲区
+    StringPtrQueue write_buffers_;
     std::unique_ptr<std::thread> thread_ptr_;   // 异步线程
     bool stop_flag_;    // 停止标志
     std::string file_path_ = "./";   // 文件路径
@@ -62,7 +69,7 @@ class AsyncFileLogger : Noncopyable {
     uint64_t lost_counter_ = 0;
 
     // 将日志写入文件
-    void WriteLogToFile(const std::string& buf);
+    void WriteLogToFile(const StringPtr buf);
     // 异步写日志
     void LogThreadFunc();
 };

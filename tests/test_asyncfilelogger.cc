@@ -8,9 +8,11 @@ int main() {
     async_file_logger.SetFileName("async_test");
     async_file_logger.StartLogging();
 
-    water::Logger::set_output_func([&](const std::stringstream& buf) {
-        async_file_logger.Output(buf);
+    water::Logger::set_output_func([&](const char *msg, const uint64_t len) {
+        async_file_logger.Output(msg, len);
     }, [](){});
+
+    /*
     LOG_DEBUG << "debug log!" << 1;
     LOG_DEBUG << "trace log!" << 2;
     LOG_INFO << "info log!" << 3;
@@ -24,15 +26,16 @@ int main() {
     if (fp == nullptr) {
         LOG_SYSERR << "syserr log1" << 7;
     }
+    */
     
     std::thread thr2([]() {
-        for (int i = 0; i < 10000; ++i) {
+        for (int i = 0; i < 1000000; ++i) {
             ++i;
             LOG_INFO << "this is " << i << "th log";
         }
     });
 
-    thr.join();
+    // thr.join();
     thr2.join();
 
 

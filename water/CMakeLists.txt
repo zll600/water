@@ -12,6 +12,7 @@ set(LIB_SRC
     base/serial_task_queue.cc
     base/logger.cc
     base/async_file_logger.cc
+    base/log_stream.cc
 )
 
 add_library(water ${LIB_SRC})

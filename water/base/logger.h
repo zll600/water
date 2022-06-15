@@ -6,10 +6,10 @@
 
 #include <string>
 #include <functional>
-#include <sstream>
 
 #include "noncopyable.h"
 #include "date.h"
+#include "log_stream.h"
 
 namespace water {
 
@@ -60,9 +60,9 @@ class Logger : Noncopyable {
     // 析构时将日志输出
     ~Logger();
 
-    std::stringstream& get_log_stream() { return log_stream_; }
+    LogStream& get_log_stream() { return log_stream_; }
 
-    static void set_output_func(std::function<void(const std::stringstream&)> output_func,
+    static void set_output_func(std::function<void(const char *msg, const uint64_t len)> output_func,
             std::function<void()> flush_func) {
         output_func_ = output_func;
         flush_func_ = flush_func;
@@ -79,13 +79,13 @@ class Logger : Noncopyable {
     }
 
  protected:
-    std::stringstream log_stream_;  // 流式写日志
+    LogStream log_stream_;  // 流式写日志
     Date date_ = Date::Now();   // 时间
     SourceFile source_file_;    // 文件名
     int file_line_;     // 行号
     LogLevel level_;    // 日志级别
     static LogLevel log_level_;     // 默认日志级别
-    static std::function<void(const std::stringstream&)> output_func_; // 将日志输出的目的地
+    static std::function<void(const char *msg, const uint64_t len)> output_func_; // 将日志输出的目的地
     static std::function<void()> flush_func_;   // 刷新缓冲区函数
 
     // 格式化时间

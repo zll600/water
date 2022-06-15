@@ -24,3 +24,9 @@
     - LoggerFile
         - 封装对 FILE 的操作
     - 实现异步文件日志
+- LogStream:
+    - FixedBuffer
+        实现自定义缓冲区
+    - 代替 std::stringstream
+- Fmt:
+    - 格式化字符串
