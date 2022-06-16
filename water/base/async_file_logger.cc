@@ -10,7 +10,7 @@
 #include <chrono>
 
 #define LOG_FLUSH_TIMEOUT 1
-#define MEM_BUFFER_SIZE 3 * 1024 * 1024
+#define MEM_BUFFER_SIZE 4 * 1024 * 1024
 
 namespace water {
 
@@ -56,22 +56,30 @@ uint64_t AsyncFileLogger::LoggerFile::GetLength() const {
 }
 
 AsyncFileLogger::AsyncFileLogger() 
-    : log_buffer_ptr_(new std::string) {
+    : log_buffer_ptr_(new std::string),
+    next_buffer_ptr_(new std::string) {
     log_buffer_ptr_->reserve(MEM_BUFFER_SIZE);
+    next_buffer_ptr_->reserve(MEM_BUFFER_SIZE);
 }
 
 AsyncFileLogger:: ~AsyncFileLogger() {
-    // std::cout << "AsyncFileLogger::log_buffer_ len = " << log_buffer_ptr_.length() << std::endl;
+    std::cout << "AsyncFileLogger::~AsyncFileLogger()" << std::endl;
     stop_flag_ = true;
     if (thread_ptr_) {
-        stop_flag_ = true;
-        cond_.notify_one();
+        cond_.notify_all();
         thread_ptr_->join();
+        std::cout << "async_file_logger thread exit" << std::endl;
     }
     // 这里日志线程已经结束了
     std::lock_guard<std::mutex> lk(mut_);
     if (!log_buffer_ptr_->empty()) {
-        WriteLogToFile(log_buffer_ptr_);
+        write_buffers_.push(log_buffer_ptr_);
+    }
+    if (!write_buffers_.empty()) {
+        StringPtr tmp_ptr = std::move(write_buffers_.front());
+        write_buffers_.pop();
+
+        WriteLogToFile(tmp_ptr);
     }
 }
 
@@ -90,16 +98,36 @@ void AsyncFileLogger::Output(const char *msg, uint64_t len) {
     // 只有当缓冲区长度到达一定长度时才唤醒日志线程
     if (log_buffer_ptr_->capacity() - log_buffer_ptr_->length() < len) {
         write_buffers_.push(log_buffer_ptr_);
-        log_buffer_ptr_ = std::make_shared<std::string>();
-        log_buffer_ptr_->reserve(MEM_BUFFER_SIZE);
+        if (next_buffer_ptr_) {
+            log_buffer_ptr_ = next_buffer_ptr_;
+            next_buffer_ptr_.reset();
+        } else {
+            log_buffer_ptr_ = std::make_shared<std::string>();
+            log_buffer_ptr_->reserve(MEM_BUFFER_SIZE);
+        }
         cond_.notify_one();
     }
+    
+    // 100M bytes log in buffer
+    if (write_buffers_.size() > 25) {
+        lost_counter_++;
+        return;
+    }
+
+    if (lost_counter_ > 0) {
+        char log_err[128];
+        sprintf(log_err, "%ld log information is lost\n", lost_counter_);
+        lost_counter_ = 0;
+        log_buffer_ptr_->append(log_err);
+    }
+
     log_buffer_ptr_->append(std::string(msg, len));
 }
 
 void AsyncFileLogger::Flush() {
     std::lock_guard<std::mutex> lk(mut_);
     if (!log_buffer_ptr_->empty()) {
+        SwapBuffer();
         cond_.notify_one();
     }
 }
@@ -135,23 +163,40 @@ void AsyncFileLogger::WriteLogToFile(const StringPtr buf) {
 void AsyncFileLogger::LogThreadFunc() {
     prctl(PR_SET_NAME, "AsyncFileLogger");
     while (!stop_flag_) {
-        std::unique_lock<std::mutex> lk(mut_);
-        cond_.wait_for(lk, std::chrono::seconds(LOG_FLUSH_TIMEOUT), [=]() {
-                return !log_buffer_ptr_->empty() || !write_buffers_.empty();
-        });
-        
-        if (!log_buffer_ptr_->empty()) {
-            write_buffers_.push(log_buffer_ptr_);
-            log_buffer_ptr_ = std::make_shared<std::string>();
-            log_buffer_ptr_->reserve(MEM_BUFFER_SIZE);
+        {
+            std::unique_lock<std::mutex> lk(mut_);
+            while (write_buffers_.empty() && !stop_flag_) {
+                if (cond_.wait_for(lk, std::chrono::seconds(LOG_FLUSH_TIMEOUT)) == std::cv_status::timeout) {
+                    if (!log_buffer_ptr_->empty()) {
+                        SwapBuffer();
+                    }
+                    break;
+                }
+            }
+            tmp_buffers_.swap(write_buffers_);
         }
-        if (!write_buffers_.empty()) {
+        while (!write_buffers_.empty()) {
             StringPtr tmp_ptr = std::move(write_buffers_.front());
             write_buffers_.pop();
-            lk.unlock();
             WriteLogToFile(tmp_ptr);
-            lk.lock();
+            tmp_ptr->clear();
+            {
+                std::unique_lock<std::mutex> lk(mut_);
+                next_buffer_ptr_ = tmp_ptr;
+            }
         }
+    }
+}
+
+void AsyncFileLogger::SwapBuffer() {
+    write_buffers_.push(log_buffer_ptr_);
+    if (next_buffer_ptr_) {
+        log_buffer_ptr_ = next_buffer_ptr_;
+        next_buffer_ptr_.reset();
+        log_buffer_ptr_->clear();
+    } else {
+        log_buffer_ptr_ = std::make_shared<std::string>();
+        log_buffer_ptr_->reserve(MEM_BUFFER_SIZE);
     }
 }
 

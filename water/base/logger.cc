@@ -5,7 +5,6 @@
 #include <cassert>
 #include <sys/syscall.h>
 #include <unistd.h>
-#include <time.h>
 
 #include <iostream>
 #include <thread>
@@ -43,7 +42,7 @@ void DefaultFlushFunc() {
     fflush(stdout);
 }
 
-static thread_local time_t last_second = 0;
+static thread_local uint64_t last_second = 0;
 static thread_local char last_time_string[32] = {0};
 static thread_local pid_t thread_id = 0;
 Logger::LogLevel Logger::log_level_ = DEBUG;
@@ -54,7 +53,7 @@ void Logger::FormatTime() {
     uint64_t now = date_.get_micro_seconds_since_epoch();
     uint64_t micro_sec = now % 1000000;
     now = now / 1000000;
-    if (now != static_cast<uint64_t>(last_second)) {
+    if (now != last_second) {
         last_second = now;
         strncpy(last_time_string, date_.ToFormattedString(false).c_str(), sizeof(last_time_string));
     }

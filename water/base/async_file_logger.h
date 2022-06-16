@@ -58,7 +58,9 @@ class AsyncFileLogger : Noncopyable {
     std::mutex mut_;    // 互斥锁
     std::condition_variable cond_;  // 条件变量
     StringPtr log_buffer_ptr_;    // 日志缓冲区
+    StringPtr next_buffer_ptr_;
     StringPtrQueue write_buffers_;
+    StringPtrQueue tmp_buffers_;
     std::unique_ptr<std::thread> thread_ptr_;   // 异步线程
     bool stop_flag_;    // 停止标志
     std::string file_path_ = "./";   // 文件路径
@@ -72,6 +74,9 @@ class AsyncFileLogger : Noncopyable {
     void WriteLogToFile(const StringPtr buf);
     // 异步写日志
     void LogThreadFunc();
+
+    // 交换日志缓冲区
+    void SwapBuffer();
 };
 
 }   // namespace water

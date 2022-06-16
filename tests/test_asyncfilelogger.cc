@@ -10,7 +10,9 @@ int main() {
 
     water::Logger::set_output_func([&](const char *msg, const uint64_t len) {
         async_file_logger.Output(msg, len);
-    }, [](){});
+    }, [&](){ async_file_logger.Flush(); });
+
+    async_file_logger.set_file_size_limit(100000000);
 
     /*
     LOG_DEBUG << "debug log!" << 1;
@@ -28,15 +30,20 @@ int main() {
     }
     */
     
-    std::thread thr2([]() {
+//     std::thread thr2([]() {
         for (int i = 0; i < 1000000; ++i) {
+            if (i % 100 == 0) {
+                LOG_ERROR << "this is the " << i << "th log";
+                continue;
+            }
+            LOG_INFO << "this is the " << i << "th log";
             ++i;
-            LOG_INFO << "this is " << i << "th log";
+            LOG_DEBUG << "this is the " << i << "th log";
         }
-    });
+//     });
 
     // thr.join();
-    thr2.join();
+//     thr2.join();
 
 
     return 0;
