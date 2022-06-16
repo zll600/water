@@ -14,7 +14,7 @@ class EventLoop;
 // 每个 Channel 对象都只属于某一个 IO 线程
 // 自始至终值负责一个文件描述符（fd）
 // 但它并不拥有这个 fd，也不会在析构的时候关闭它
-class Channel : public Noncopyable {
+class Channel : Noncopyable {
  public:
     using EventCallback = std::function<void()>;
     Channel(EventLoop *loop, int fd);
@@ -43,8 +43,9 @@ class Channel : public Noncopyable {
     }
 
     // 设置活动事件
-    void set_revents(int revt) {
+    int set_revents(int revt) {
         revents_ = revt;
+        return revt;
     }
 
     // 是否无事件
