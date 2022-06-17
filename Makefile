@@ -13,3 +13,4 @@ clean:
 
 disclean:
 	-rm -rf build
+	-rm -rf lib

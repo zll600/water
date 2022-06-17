@@ -13,6 +13,10 @@ set(LIB_SRC
     base/logger.cc
     base/async_file_logger.cc
     base/log_stream.cc
+    net/inetaddress.cc
+    net/socket.cc
+    net/acceptor.cc
+    net/tcp_server.cc
 )
 
 add_library(water ${LIB_SRC})
