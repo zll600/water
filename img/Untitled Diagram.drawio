@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" modified="2022-06-17T06:47:32.526Z" agent="5.0 (X11)" etag="ZwV7Wzu8JG6YBx8TZdQO" version="20.0.1" type="github">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1386" dy="711" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-0" value="Timer" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="120" y="40" width="240" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-1" value="+ callback_: TimerCallback&#xa;+ when_: Date&#xa;+ interval_: double&#xa;+ repeat_: bool&#xa;+ timer_seq: int64_t&#xa;+ timer_created_: std::atomic&lt;int64_t&gt;&#xa;&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-0">
+          <mxGeometry y="26" width="240" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-2" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-0">
+          <mxGeometry y="120" width="240" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-3" value="+ Timer()&#xa;+ ~Timer()&#xa;+ Run(): void&#xa;+ Restart(): void&#xa;+ get_when(): Date&#xa;+ IsRepeat(): bool&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-0">
+          <mxGeometry y="128" width="240" height="112" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-4" value="Date" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="80" y="440" width="320" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-5" value="+ micro_seconds_since_epoch = 0&#xa;&#xa;+ Date(int64_t micro_seconds)&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-4">
+          <mxGeometry y="26" width="320" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-6" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-4">
+          <mxGeometry y="80" width="320" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-7" value="+ Date()&#xa;+ ~Date()&#xa;+ After(double seconds)&#xa;+ get_micro_seconds_since_epoch()&#xa;+ ToFormattedString(bool): std::string&#xa;+ ToCustomedFormattedString(const std::string)&#xa;+ IsSameSeconds(const Date&amp;)&#xa;+ RoundSeconds(): const Date&#xa;+ RoundDAy(): const Date&#xa;+ Now(): const Date&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-4">
+          <mxGeometry y="88" width="320" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-8" value="TimerQueue" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="80" y="760" width="400" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-9" value="+ loop_: EventLoop&#xa;+ timerfd_: const int&#xa;+ timerfd_channel_: Channel&#xa;+ timers_: std::priority_queue&lt;TimerPtr, vector&lt;TimerPtr&gt;, cmp&gt;&#xa;+ calling_expired_timers_: bool&#xa;&#xa;+ HandleRead()&#xa;+ Insert(const TimerPtr&amp;)&#xa;+ GetExpired(): std::vector&lt;TimerPtr&gt;&#xa;+ Reset(const std::vector&lt;TimerPtr&gt;&amp; expired, const Date&amp; now)&#xa;+ GetExpired(const Date&amp; now): std::vector&lt;TimerPtr&gt;&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-8">
+          <mxGeometry y="26" width="400" height="174" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-10" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-8">
+          <mxGeometry y="200" width="400" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="xaw7-e5BtQv1kLx3a2RL-11" value="+ AddTimer(const TimerCallback&amp;, const Date&amp;, double interval)&#xa;+ AddTimerInLoop(const TimerPtr&amp;)&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="xaw7-e5BtQv1kLx3a2RL-8">
+          <mxGeometry y="208" width="400" height="72" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
