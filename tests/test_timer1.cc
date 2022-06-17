@@ -11,7 +11,7 @@ int main() {
     loop.RunAt(begin, [=,&loop](){
         LOG_DEBUG<<"test begin:";
 
-        srand(time(NULL));
+        srand(unsigned(time(NULL)));
         for(int i = 0;i < 10000; i++)
         {
             int aa = rand() % 10000;
