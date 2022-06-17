@@ -21,7 +21,7 @@ struct cmp {
 };
 
 class EventLoop;
-class TimerQueue : public Noncopyable {
+class TimerQueue : Noncopyable {
  public:
     TimerQueue(EventLoop* loop);
     ~TimerQueue();

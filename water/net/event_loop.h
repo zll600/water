@@ -24,7 +24,7 @@ using Func = std::function<void()>;
 // IO 线程创建 EventLoop 对象
 // EventLoop 的主要功能是运行事件循环 EventLoop::Loop()
 // EventLoop 对象的生命周期和 IO 线程一样长，它不必是 heap 对象
-class EventLoop : public Noncopyable {
+class EventLoop : Noncopyable {
  public:
     EventLoop();
     ~EventLoop();

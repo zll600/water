@@ -152,6 +152,4 @@ void TimerQueue::Reset(const std::vector<TimerPtr>& expired, const Date& now) {
     }
 }
 
-
-
 }   // namespace water

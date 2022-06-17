@@ -18,7 +18,8 @@ namespace water {
     bool Timer::operator<(const Timer& timer) const {
         return when_ < timer.when_;
     }
+
     bool Timer::operator>(const Timer& timer) const {
         return when_ > timer.when_;
     }
-}
+}   // namespace water

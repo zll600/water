@@ -50,6 +50,7 @@ class Date {
  private:
     Date(int64_t micro_seconds) : micro_seconds_since_epoch_(micro_seconds) {}
 
+    // time_t == long int 这里为兼容系统调用的返回值，使用有符号数
     int64_t micro_seconds_since_epoch_ = 0;     // 以微秒形式保存时间
 };
 

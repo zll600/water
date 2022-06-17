@@ -10,6 +10,7 @@
 
 #include "timer_queue.h"
 #include "poller.h"
+#include "water/base/logger.h"
 
 namespace water {
 
@@ -163,12 +164,18 @@ void EventLoop::DoRunInLoopFuncs() {
 
 void EventLoop::WakeUp() {
     uint64_t tmp = 1;
-    ::write(wake_up_fd_, &tmp, sizeof(tmp));
+    int ret = ::write(wake_up_fd_, &tmp, sizeof(tmp));
+    if (ret < 0) {
+        LOG_SYSERR << "wake up error";
+    }
 }
 
 void EventLoop::WakeUpRead() {
     uint64_t tmp;
-    ::read(wake_up_fd_, &tmp, sizeof(tmp));
+    int ret = ::read(wake_up_fd_, &tmp, sizeof(tmp));
+    if (ret < 0) {
+        LOG_SYSERR << "wake up read error";
+    }
 }
 
 } // namespace water

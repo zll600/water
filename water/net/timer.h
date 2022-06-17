@@ -10,7 +10,8 @@
 
 namespace water {
 
-class Timer : public Noncopyable {
+// 定时器
+class Timer : Noncopyable {
  public:
     Timer(const TimerCallback& cb, const Date& when, double interval)
         : callback_(cb),

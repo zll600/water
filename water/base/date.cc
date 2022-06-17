@@ -11,6 +11,7 @@ const Date Date::After(double seconds) const {
 
 const Date Date::Now() {
     struct timeval tv;
+    // obtain timeval
     gettimeofday(&tv, nullptr);
     int64_t seconds = tv.tv_sec;
     return Date(seconds * MICRO_SECONDS_PER_SEC + tv.tv_usec);
@@ -51,10 +52,13 @@ const Date Date::RoundSecond() const {
 const Date Date::RoundDay() const {
     struct tm *t;
     time_t seconds = static_cast<time_t>(micro_seconds_since_epoch_ / MICRO_SECONDS_PER_SEC);
+    // time_t to tm
     t = localtime(&seconds);
+    // reset sec, min, hour
     t->tm_hour = 0;
     t->tm_min = 0;
     t->tm_sec = 0;
+    // tm to time_t
     return Date(mktime(t) * MICRO_SECONDS_PER_SEC);
 }
 
