@@ -17,6 +17,7 @@ class Socket : Noncopyable {
     void Listen();
     int Accept(InetAddress *peer_addr);
     void CloseWrite();
+    int Read(char *buffer, uint64_t len);
     int get_fd() const { return sock_fd_; }
  protected:
     int sock_fd_;

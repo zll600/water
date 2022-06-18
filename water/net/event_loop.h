@@ -9,12 +9,12 @@
 
 #include "water/base/noncopyable.h"
 #include "water/base/date.h"
-#include "channel.h"
 
 namespace water {
 
 class Poller;
 class TimerQueue;
+class Channel;
 
 // Channel 列表类型
 using ChannelList = std::vector<Channel*>;

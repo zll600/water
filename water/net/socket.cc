@@ -58,4 +58,8 @@ void Socket::CloseWrite() {
     }
 }
 
+int Socket::Read(char *buffer, uint64_t len) {
+    return ::read(sock_fd_, buffer, len);
+}
+
 }   // namespace water

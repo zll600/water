@@ -62,19 +62,19 @@ void ReadTimerFd(int timer_fd, const Date& now) {
 TimerQueue::TimerQueue(EventLoop *loop)
     : loop_(loop),
     timerfd_(CreateTimerfd()),
-    timerfd_channel_(loop, timerfd_),
+    timerfd_channel_(new Channel(loop, timerfd_)),
     timers_(),
     calling_expired_timers_(false) {
     // 设置"读"回调函数和可读
-    timerfd_channel_.set_read_callback(
+    timerfd_channel_->set_read_callback(
             std::bind(&TimerQueue::HandleRead, this));
     // we are always reading the timerfd, we disarm it with timerfd_settime
-    timerfd_channel_.EnableReading();
+    timerfd_channel_->EnableReading();
 }
 
 TimerQueue::~TimerQueue() {
-    timerfd_channel_.DisableAll();
-    timerfd_channel_.Remove();
+    timerfd_channel_->DisableAll();
+    timerfd_channel_->Remove();
     ::close(timerfd_);
 }
 

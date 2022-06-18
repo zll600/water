@@ -37,7 +37,7 @@ class TimerQueue : Noncopyable {
  private:
     EventLoop *loop_;   // 所属时间循环
     const int timerfd_; // 时间事件描述符
-    Channel timerfd_channel_;  // timerfs 的 channel
+    std::unique_ptr<Channel> timerfd_channel_;  // timerfs 的 channel
     std::priority_queue<TimerPtr, std::vector<TimerPtr>, cmp> timers_;  // 存储定时器，使用小顶堆
     bool calling_expired_timers_;   // 是否处理到期的定时器
     

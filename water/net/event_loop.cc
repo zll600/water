@@ -10,6 +10,7 @@
 
 #include "timer_queue.h"
 #include "poller.h"
+#include "channel.h"
 #include "water/base/logger.h"
 
 namespace water {
