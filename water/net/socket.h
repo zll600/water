@@ -8,7 +8,7 @@ namespace water {
 
 class Socket : Noncopyable {
  public:
-    Socket(int family);
+    explicit Socket(int sock_fd);
     ~Socket();
 
     // abort if address in use
@@ -19,6 +19,12 @@ class Socket : Noncopyable {
     void CloseWrite();
     int Read(char *buffer, uint64_t len);
     int get_fd() const { return sock_fd_; }
+
+
+    static int CreateNonblockingSocketOrDie(int family);
+    static void SetNoncBlockAndCloseExec(int sock_fd);
+    static struct sockaddr_in6 GetLocalAddr(int sockfd);
+    static struct sockaddr_in6 GetPeerAddr(int sockfd);
  protected:
     int sock_fd_;
 };

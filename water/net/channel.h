@@ -1,9 +1,10 @@
 #ifndef __WATER_NET_CHANNEL_H__
 #define __WATER_NET_CHANNEL_H__
 
-#include "water/base/noncopyable.h"
-
 #include <functional>
+#include <memory>
+
+#include "water/base/noncopyable.h"
 
 namespace water {
 
@@ -19,10 +20,13 @@ class Channel : Noncopyable {
     using EventCallback = std::function<void()>;
     Channel(EventLoop *loop, int fd);
 
+    // HandleEventSafely wrap
+    void HandleEvent();
+
     /**
      * 处理事件
      */
-    void HandleEvent();
+    void HandleEventSafely();
     // 设置读回调函数
     void set_read_callback(const EventCallback& cb) {
         read_callback_ = cb;
@@ -72,6 +76,8 @@ class Channel : Noncopyable {
     // 从 EventLoop 中移除该 Channel
     void Remove();
 
+    void Tie(const std::shared_ptr<void>& obj) { tie_ = obj; tied_ = true; }
+
     // 获取 loop_ 指针
     EventLoop* OwnerLoop() {
         return loop_;
@@ -81,6 +87,24 @@ class Channel : Noncopyable {
         events_ |= kReadEvent;
         Update();
     }
+
+    void DisableReading() {
+        events_ &= ~kReadEvent;
+        Update();
+    }
+
+    void EnableWriting() {
+        events_ |= kWriteEvent;
+        Update();
+    }
+
+    void DisableWriting() {
+        events_ &= ~kWriteEvent;
+        Update();
+    }
+
+    bool IsWriting() const { return events_ & kWriteEvent; }
+    bool IsReading() const { return events_ & kReadEvent; }
 
  private:
     // 无事件
@@ -96,6 +120,8 @@ class Channel : Noncopyable {
     int revents_;   // 活动事件，由 epoll 或者 poll 设置
     int index_;     // 表示当前 channel 的状态
     bool added_to_loop_ = false;
+    std::weak_ptr<void> tie_;
+    bool tied_;
 
     // 事件回调函数
     EventCallback read_callback_;

@@ -13,3 +13,5 @@
 #include "net/acceptor.h"
 #include "net/socket.h"
 #include "net/tcp_server.h"
+#include "base/msg_buffer.h"
+#include "net/tcp_connection.h"

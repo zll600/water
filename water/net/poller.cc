@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "channel.h"
+#include "water/base/logger.h"
 
 namespace water {
 
@@ -46,7 +47,7 @@ void Poller::Poll(int timeout_ms, ChannelList *active_channels) {
     int num_events = ::epoll_wait(epoll_fd_, events_.data(), static_cast<int>(events_.size()), timeout_ms);
     int save_errno = errno;
     if (num_events > 0) {
-        std::cout << num_events << " events happened " << std::endl;
+        LOG_TRACE << num_events << " events happened ";
         FillactiveChannels(num_events, active_channels);
         if (static_cast<size_t>(num_events) == events_.size()) {
             events_.resize(events_.size() * 2);
@@ -60,6 +61,7 @@ void Poller::Poll(int timeout_ms, ChannelList *active_channels) {
             std::cout << "Poller::Poll() " << std::endl;
         }
     }
+    LOG_TRACE << "active Channels num:"<< active_channels->size();
 }
 
 void Poller::FillactiveChannels(int num_events, ChannelList *active_channels) const {

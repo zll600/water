@@ -4,6 +4,7 @@
 #include <poll.h>
 
 #include "event_loop.h"
+#include "water/base/logger.h"
 
 namespace water {
 
@@ -16,7 +17,8 @@ Channel::Channel(EventLoop *loop, int fd)
     fd_(fd),
     events_(0),
     revents_(0),
-    index_(-1) {
+    index_(-1),
+    tied_(false) {
 }
 
 void Channel::Remove() {
@@ -30,6 +32,19 @@ void Channel::Update() {
 }
 
 void Channel::HandleEvent() {
+    LOG_TRACE << "revents: " << revents_;
+    if (tied_) {
+        std::shared_ptr<void> guard = tie_.lock();
+        if (guard) {
+            HandleEventSafely();
+        }
+    } else {
+        HandleEventSafely();
+    }
+}
+
+void Channel::HandleEventSafely() {
+    LOG_TRACE << "revents: " << revents_;
     if (revents_ & POLLNVAL) {
         
     }
@@ -41,6 +56,7 @@ void Channel::HandleEvent() {
 
     // 可读
     if (revents_ & (POLLIN | POLLPRI | POLLRDHUP)) {
+        LOG_TRACE << "handle read";
         if (read_callback_) {
             read_callback_();
         }

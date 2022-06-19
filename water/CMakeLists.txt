@@ -17,6 +17,8 @@ set(LIB_SRC
     net/socket.cc
     net/acceptor.cc
     net/tcp_server.cc
+    base/msg_buffer.cc
+    net/tcp_connection.cc
 )
 
 add_library(water ${LIB_SRC})

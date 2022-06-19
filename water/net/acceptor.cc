@@ -7,7 +7,7 @@
 namespace water {
 
 Acceptor::Acceptor(EventLoop *loop, const InetAddress& addr) 
-        : sock_(addr.get_sock_addr()->sa_family),
+        : sock_(Socket::CreateNonblockingSocketOrDie(addr.get_sock_addr()->sa_family)),
         addr_(addr), 
         loop_(loop),
         accept_channel_(loop, sock_.get_fd()) {

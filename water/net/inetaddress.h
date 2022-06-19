@@ -43,6 +43,8 @@ class InetAddress {
     uint16_t ToPort() const;
 
     // default copy/assignment are Okay
+    InetAddress(const InetAddress& addr) =default;
+    InetAddress& operator=(const InetAddress& addr) = default;
 
     const struct sockaddr* get_sock_addr() const {
       return static_cast<const struct sockaddr*>((void *)(&addr6_));
