@@ -10,7 +10,7 @@ uint64_t hton64(uint64_t port) {
     return (static_cast<uint64_t>(htonl(port)) << 32) | htonl(port >> 32);
 }
 
-uint64_t ntohl64(uint64_t port) {
+uint64_t ntoh64(uint64_t port) {
     return (static_cast<uint64_t>(ntohl(port)) << 32) | ntohl(port >> 32);
 }
 

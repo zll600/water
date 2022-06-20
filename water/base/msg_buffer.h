@@ -6,18 +6,30 @@
 #include <vector>
 #include <string>
 
+#define BUFFER_DEF_LEN 2048
+
 namespace water {
 
 class MsgBuffer {
  public:
-    MsgBuffer(size_t len = 2048);
+    MsgBuffer(size_t len = BUFFER_DEF_LEN);
 
     // 使用默认的拷贝构造函数、赋值函数和析构函数
     
     /**
      * 获取可读区域的起始地址
      */
-    const char *Peek() const { return Begin() + read_index_; }
+    const char* Peek() const { return Begin() + read_index_; }
+    const uint8_t PeekInt8() const;
+    const uint16_t PeekInt16() const;
+    const uint32_t PeekInt32() const;
+    const uint64_t PeekInt64() const;
+    //read
+    std::string Read(uint64_t len);
+    uint8_t ReadInt8();
+    uint16_t ReadInt16();
+    uint32_t ReadInt32();
+    uint64_t ReadInt64();
     void Swap(MsgBuffer& buf);
 
     /**
@@ -43,6 +55,18 @@ class MsgBuffer {
      * 添加 len 大小的数据到可读区域后面。
      */
     void Append(const char *buf, size_t len);
+
+    void AppendInt8(const uint8_t b);
+    void AppendInt16(const uint16_t s);
+    void AppendInt32(const uint32_t i);
+    void AppendInt64(const uint64_t l);
+
+    //add in front
+    void AddInFront(const char *buf,size_t len);
+    void AddInFrontInt8(const int8_t b);
+    void AddInFrontInt16(const int16_t s);
+    void AddInFrontInt32(const int32_t i);
+    void AddInFrontInt64(const int64_t l);
 
     /**
      * 重置缓冲区
