@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-06-21T02:52:20.305Z" agent="5.0 (X11)" etag="Z7yeO5TpmGK5wDHwVpOE" version="20.0.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-06-21T02:56:37.504Z" agent="5.0 (X11)" etag="aM_M784if7AZY95IRsik" version="20.0.1" type="github">
   <diagram id="wbar-DZNt5Y-Bxtzc0fq" name="Page-1">
     <mxGraphModel dx="1386" dy="711" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -17,7 +17,7 @@
           <mxGeometry y="278" width="330" height="242" as="geometry" />
         </mxCell>
         <mxCell id="YUDDeTs7dCrq4I4m945b-10" value="Channel" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
-          <mxGeometry x="520" y="40" width="280" height="600" as="geometry">
+          <mxGeometry x="560" y="640" width="280" height="600" as="geometry">
             <mxRectangle x="520" y="40" width="80" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -42,10 +42,14 @@
         <mxCell id="YUDDeTs7dCrq4I4m945b-17" value="+ Poll(int timeout_ms, ChannelList *active_channels): void&#xa;+ UpdateChannel(Channel *chan): void&#xa;+ RemoveChannel(Channel *chan): void&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="YUDDeTs7dCrq4I4m945b-14">
           <mxGeometry y="168" width="440" height="72" as="geometry" />
         </mxCell>
-        <mxCell id="YUDDeTs7dCrq4I4m945b-18" value="" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="YUDDeTs7dCrq4I4m945b-11" target="YUDDeTs7dCrq4I4m945b-3">
+        <mxCell id="YUDDeTs7dCrq4I4m945b-18" value="" style="endArrow=diamondThin;endFill=1;endSize=24;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.733;entryY=1.008;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="YUDDeTs7dCrq4I4m945b-10" target="YUDDeTs7dCrq4I4m945b-5">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="340" y="220" as="sourcePoint" />
             <mxPoint x="440" y="170" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="700" y="600" />
+              <mxPoint x="342" y="600" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="YUDDeTs7dCrq4I4m945b-22" value="1..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YUDDeTs7dCrq4I4m945b-18">
@@ -65,10 +69,13 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="YUDDeTs7dCrq4I4m945b-20" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="YUDDeTs7dCrq4I4m945b-2">
+        <mxCell id="YUDDeTs7dCrq4I4m945b-20" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="YUDDeTs7dCrq4I4m945b-10">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="490" y="250" as="sourcePoint" />
-            <mxPoint x="520" y="250" as="targetPoint" />
+            <mxPoint x="430" y="440" as="sourcePoint" />
+            <mxPoint x="510" y="410" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="770" y="440" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="YUDDeTs7dCrq4I4m945b-23" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="YUDDeTs7dCrq4I4m945b-20">
