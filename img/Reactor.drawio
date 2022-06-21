@@ -1,1 +1,22 @@
-<mxfile host="app.diagrams.net" modified="2022-06-21T00:22:09.803Z" agent="5.0 (X11)" version="20.0.1" etag="zLED9-LtaAbl8HcJRrC1" type="github"><diagram id="wbar-DZNt5Y-Bxtzc0fq">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-06-21T00:23:14.614Z" agent="5.0 (X11)" etag="yn9jIY-jfj-IQbh3z2Nd" version="20.0.1" type="github">
+  <diagram id="wbar-DZNt5Y-Bxtzc0fq" name="Page-1">
+    <mxGraphModel dx="1386" dy="756" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="YUDDeTs7dCrq4I4m945b-2" value="EventLoop" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="40" width="330" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="YUDDeTs7dCrq4I4m945b-3" value="- looping_: bool&#xa;- thread_id_: std::thread_id&#xa;- poller_: std::unique&lt;Pollger&gt;&#xa;- active_channels_: ChannelList&#xa;- curr_active_channels_: ChannelList&#xa;- quit_: bool&#xa;- event_handling_: bool&#xa;- funcs_mutex: mut_&#xa;- timer_queue: std::unique&lt;TimerQueue&gt;&#xa;- calling_funcs_: bool&#xa;- wake_up_fd: int&#xa;- wake_up_channel_ptr: std::unique&lt;ChanneL&gt;&#xa;&#xa;- AbortNotInLoopThread()&#xa;- DoRunInLoopFuncs()&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="YUDDeTs7dCrq4I4m945b-2">
+          <mxGeometry y="26" width="330" height="244" as="geometry" />
+        </mxCell>
+        <mxCell id="YUDDeTs7dCrq4I4m945b-4" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="YUDDeTs7dCrq4I4m945b-2">
+          <mxGeometry y="270" width="330" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="YUDDeTs7dCrq4I4m945b-5" value="+ IsInLoopThread(): bool&#xa;+ AssertInLoopThread(): void&#xa;+ Loop(): void&#xa;+ set_quit(): void&#xa;+ UpdateChannel(Channel *chan): void&#xa;+ RemoveChannel(Channel *chan): void&#xa;+ RunInLoop(const Func&amp; func): void&#xa;&#xa;+ QueueInLoop(const Func&amp; func): void&#xa;+ WakeUp(): void&#xa;+ WakeUpRead(): void&#xa;+ RunAt(const Date&amp; time, const Func&amp; func): void&#xa;+ RunAfter(double delay, const Func&amp; func): void&#xa;+ RunEvery(double interval, const Func&amp; func): void&#xa;&#xa;static   GetEventLoopOfCurrentThread(): EventLoop*&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="YUDDeTs7dCrq4I4m945b-2">
+          <mxGeometry y="278" width="330" height="242" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
