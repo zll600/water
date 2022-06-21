@@ -2,10 +2,13 @@
 #include <iostream>
 
 int main(void) {
+    LOG_DEBUG << "test start";
     water::Logger::set_log_level(water::Logger::TRACE);
-    water::EventLoop loop;
+    // water::EventLoop loop;
+    water::EventLoopThread loop_thread;
+    loop_thread.Run();
     water::InetAddress addr(8888);
-    water::TcpServer server(&loop, addr, "test");
+    water::TcpServer server(loop_thread.get_loop(), addr, "test");
     server.set_recv_msg_callback([](const water::TcpConnectionPtr& conn, water::MsgBuffer *buffer){
         LOG_DEBUG<<"recv callback!";
         std::cout << std::string(buffer->Peek(), buffer->ReadableBytes());
@@ -21,7 +24,8 @@ int main(void) {
         }
     });
     server.Start();
-    loop.Loop();
+    // loop.Loop();
+    loop_thread.Wait();
 
     return 0;
 }

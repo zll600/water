@@ -19,6 +19,7 @@ set(LIB_SRC
     net/tcp_server.cc
     base/msg_buffer.cc
     net/tcp_connection.cc
+    net/event_loop_thread.cc
 )
 
 add_library(water ${LIB_SRC})
