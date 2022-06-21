@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-06-21T02:56:52.806Z" agent="5.0 (X11)" etag="LUglTEdIS7Rjf291UGGj" version="20.0.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-06-21T02:57:05.855Z" agent="5.0 (X11)" etag="mHy16YSHmqpUc8o-tFto" version="20.0.1" type="github">
   <diagram id="kLmN4EKAB4e_yHycUZNa" name="Page-1">
     <mxGraphModel dx="1386" dy="756" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -28,10 +28,10 @@
         <mxCell id="GphbjgsX8QSrk0KPlg3Y-9" value="+ virtual void RunTaskInQueue(const std::function&lt;void()&gt;&amp; task) = 0&#xa;+ virtual get_queue_name() const: std::string&#xa;+ WaitAllTaskFinished(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="GphbjgsX8QSrk0KPlg3Y-6">
           <mxGeometry y="168" width="480" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="GphbjgsX8QSrk0KPlg3Y-10" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;entryX=0.498;entryY=1.05;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="GphbjgsX8QSrk0KPlg3Y-6" target="GphbjgsX8QSrk0KPlg3Y-5">
+        <mxCell id="GphbjgsX8QSrk0KPlg3Y-10" value="" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="GphbjgsX8QSrk0KPlg3Y-6">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="340" y="220" as="sourcePoint" />
-            <mxPoint x="310" y="180" as="targetPoint" />
+            <mxPoint x="360" y="160" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
