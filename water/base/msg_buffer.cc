@@ -6,6 +6,8 @@
 #include <sys/uio.h>
 #include <arpa/inet.h>
 
+#include <algorithm>
+
 #include "funcs.h"
 
 namespace water {
@@ -14,11 +16,52 @@ namespace water {
 
 MsgBuffer::MsgBuffer(size_t len)
     : read_index_(BUF_OFFSET),
+    init_cap_(len),
     write_index_(read_index_),
     buffer_(len + read_index_) {
 }
 
-void MsgBuffer::EnsurceWriteableBytes(size_t len) {
+MsgBuffer::MsgBuffer(const MsgBuffer& buf)
+    : read_index_(buf.read_index_),
+    init_cap_(buf.init_cap_),
+    write_index_(buf.write_index_),
+    buffer_(buf.buffer_) {
+}
+
+MsgBuffer& MsgBuffer::operator=(const MsgBuffer& buf) {
+    if (&buf == this) {
+        return *this;
+    }
+
+    read_index_ = buf.read_index_;
+    init_cap_ = buf.init_cap_;
+    write_index_ = buf.write_index_;
+    buffer_ = buf.buffer_;
+
+    return *this;
+}
+
+MsgBuffer::MsgBuffer(MsgBuffer&& buf)
+    : read_index_(buf.read_index_),
+    init_cap_(buf.init_cap_),
+    write_index_(buf.write_index_),
+    buffer_(std::move(buf.buffer_)) {
+}
+
+MsgBuffer& MsgBuffer::operator=(MsgBuffer&& buf) {
+    if (&buf == this) {
+        return *this;
+    }
+
+    read_index_ = buf.read_index_;
+    init_cap_ = buf.init_cap_;
+    write_index_ = buf.write_index_;
+    buffer_ = std::move(buf.buffer_);
+
+    return *this;
+}
+
+void MsgBuffer::EnsureWriteableBytes(size_t len) {
     if (WriteableBytes() >= len) {
         return;
     }
@@ -46,22 +89,23 @@ void MsgBuffer::EnsurceWriteableBytes(size_t len) {
 void MsgBuffer::Swap(MsgBuffer& buf) {
     buffer_.swap(buf.buffer_);
     std::swap(read_index_, buf.read_index_);
+    std::swap(init_cap_, buf.init_cap_);
     std::swap(write_index_, buf.write_index_);
 }
 
 void MsgBuffer::Append(const MsgBuffer& buf) {
-    EnsurceWriteableBytes(buf.ReadableBytes());
+    EnsureWriteableBytes(buf.ReadableBytes());
     memcpy(&buffer_[write_index_], buf.Peek(), buf.ReadableBytes());
     write_index_ += buf.ReadableBytes();
 }
 
 void MsgBuffer::Append(const std::string& buf) {
-    EnsurceWriteableBytes(buf.length());
+    EnsureWriteableBytes(buf.length());
     Append(buf.c_str(), buf.length());
 }
 
 void MsgBuffer::Append(const char *buf, size_t len) {
-    EnsurceWriteableBytes(len);
+    EnsureWriteableBytes(len);
     memcpy(&buffer_[write_index_], buf, len);
     write_index_ += len;
 }
@@ -75,6 +119,9 @@ void MsgBuffer::Retrieve(size_t len) {
 }
 
 void MsgBuffer::RetrieveAll() {
+    if (buffer_.size() > (init_cap_ * 2)) {
+        buffer_.resize(init_cap_);
+    }
     write_index_ = read_index_ = BUF_OFFSET;
 }
 
@@ -181,9 +228,17 @@ void MsgBuffer::AddInFront(const char *buf, size_t len) {
         read_index_ -= len;
         return;
     }
+
+    if (len <= WriteableBytes()) {
+        std::copy(Begin() + read_index_, Begin() + write_index_, Begin() + read_index_ + len);
+        memcpy(Begin() + read_index_, buf, len);
+        write_index_ += len;
+        return;
+    }
+
     size_t new_len;
-    if (len + ReadableBytes() < BUFFER_DEF_LEN) {
-        new_len = BUFFER_DEF_LEN;
+    if (len + ReadableBytes() < init_cap_) {
+        new_len = init_cap_;
     } else {
         new_len = len + ReadableBytes();
     }
@@ -208,6 +263,11 @@ void MsgBuffer::AddInFrontInt32(const int32_t i) {
 void MsgBuffer::AddInFrontInt64(const int64_t l) {
     uint64_t ll = hton64(l);
     AddInFront(static_cast<const char*>((void*)&ll), 4);
+}
+
+const char* MsgBuffer::FindCRLF() const {
+    const char *crlf = std::search(Peek(), BeginWrite(), kCRLF, kCRLF + 2);
+    return crlf == BeginWrite() ? nullptr : crlf;
 }
 
 }   // namespace water

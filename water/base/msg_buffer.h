@@ -8,18 +8,22 @@
 
 #define BUFFER_DEF_LEN 2048
 
+static const char kCRLF[] = "\r\n";
 namespace water {
 
 class MsgBuffer {
  public:
     MsgBuffer(size_t len = BUFFER_DEF_LEN);
-
-    // 使用默认的拷贝构造函数、赋值函数和析构函数
+    MsgBuffer(const MsgBuffer& buf);
+    MsgBuffer& operator=(const MsgBuffer& buf);
+    MsgBuffer(MsgBuffer&& buf);
+    MsgBuffer& operator=(MsgBuffer&& buf);
     
     /**
      * 获取可读区域的起始地址
      */
     const char* Peek() const { return Begin() + read_index_; }
+    const char* BeginWrite() const { return Begin() + write_index_; }
     const uint8_t PeekInt8() const;
     const uint16_t PeekInt16() const;
     const uint32_t PeekInt32() const;
@@ -84,8 +88,11 @@ class MsgBuffer {
      */
     size_t ReadFd(int fd, int *ret_errno);
 
+    const char* FindCRLF() const;
+
  private:
     size_t read_index_;
+    size_t init_cap_;
     size_t write_index_;
     std::vector<char> buffer_;
 
@@ -98,7 +105,7 @@ class MsgBuffer {
     /**
      * 确保可写区域能容纳得下 len 大小的数据。如果容纳不小，则将 buffer_ 扩容或者调整。
      */
-    void EnsurceWriteableBytes(size_t len);
+    void EnsureWriteableBytes(size_t len);
 };
 
 }   // namespace water
