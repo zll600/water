@@ -25,7 +25,7 @@ using EventList = std::vector<struct epoll_event>;
     // 其生命周期与 EVentLoop 一样长
     //
     // Poller 采用的是 level trigger
-class Poller : public Noncopyable {
+class Poller : Noncopyable {
  public:
     Poller(EventLoop *loop);
     ~Poller();
@@ -51,9 +51,9 @@ class Poller : public Noncopyable {
 
  private:
     using ChannelMap = std::map<int, Channel*>;
+    static const int kInitEventListSize = 16;   // 事件数组大小
 
     EventLoop *owner_loop_; // 所属事件循环
-    static const int kInitEventListSize = 16;   // 事件数组大小
     int epoll_fd_;  // epoll 文件描述符
     EventList events_;  // 活动文件描述符列表
     ChannelMap channels_;   // <活动文件描述福,Channel>
