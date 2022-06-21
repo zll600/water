@@ -18,10 +18,10 @@ class SerialTaskQueue : public TaskQueue {
     ~SerialTaskQueue();
 
     virtual void RunTaskInQueue(const std::function<void()>& task);
-    virtual std::string get_queue_name() const { return queeu_name_; }
+    virtual std::string get_queue_name() const { return queue_name_; }
     void WaitAllTaskFinished();
  private:
-    std::string queeu_name_;    // 人物队列名称
+    std::string queue_name_;    // 人物队列名称
     std::queue<std::function<void()>> task_queue_;  // 任务队列
     std::mutex task_mutex_; // 互斥锁
     std::condition_variable task_cond_; // 条件变量

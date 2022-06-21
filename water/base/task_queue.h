@@ -9,7 +9,7 @@
 namespace water {
 
 // 任务队列
-class TaskQueue : public Noncopyable {
+class TaskQueue : Noncopyable {
  public:
     virtual void RunTaskInQueue(const std::function<void()>& task) =0;
     virtual std::string get_queue_name() const { return ""; }
